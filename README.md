@@ -1,4 +1,7 @@
 #  Probabilistic programming practical materials
+
+This is NOT the original repo. It is a copy of the code available in https://bitbucket.org/probprog/mlss2015/raw/aa10c392733811aacf441f7b0fce8d6640db0372/docs/getting-started/anglican-getting-started-guide.pdf 
+
 ## MLSS 2015
 
 There is a [getting started guide](docs/getting-started/mlss-specific.pdf) which explains how to get up and running with Anglican.
