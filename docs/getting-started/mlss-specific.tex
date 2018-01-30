@@ -1,0 +1,160 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+%\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage{inconsolata}
+%\lstset{basicstyle=\ttfamily}
+\usepackage{minted}
+
+\title{MLSS 2015 Probabilistic Programming Practical Getting Started Guide}
+\author{Tom Jin, Frank Wood, Brooks Paige}
+\date{July 2015}
+
+\begin{document}
+
+\maketitle
+
+\section{Errata}
+
+This is essentially the same document as was distributed previously.  The key differences are:
+
+\begin{itemize}
+\item MLSS-specific exercise materials {\bf must be downloaded {\em before}} the practical session directly from 
+\url{http://tinyurl.com/obds2vk}.  \texttt{git} is no longer specifically required, however, if you are familiar with \texttt{git} you can, instead, clone the  \url{https://bitbucket.org/probprog/mlss2015/} repository.
+\item We have discovered that default \texttt{lein} distributed by many Linux package managers is quite old.  Run \texttt{lein version} to check that your \texttt{lein} version is greater than 2.  If it isn't, you {\em must} follow the installation directions below.
+\item All exercises can now be run and edited in a browser-based notebook, so installing a Clojure IDE is no longer required.
+\item Please contact us (\url{fwood@robots.ox.ac.uk}, \url{brooks@robots.ox.ac.uk}) {\em before} your practical if you aren't able to get everything installed.  We're both in T\"ubingen.
+\end{itemize}
+
+
+\section{Introduction}
+The probabilistic programming practical will give you hands-on experience
+with probabilistic programming, particularly the Anglican programming language
+and system \url{http://www.robots.ox.ac.uk/~fwood/anglican}.
+
+By the end of the practical you should be comfortable programming in Clojure 
+and Anglican, and, more importantly, familiar with how to program in probabilistic
+programming languages in general.
+
+The exercises and short-lecture introductions to the exercises will be constructed
+so as to help you understand how probabilistic programming works in general.  And while the 
+amount of time we will have together will be insufficient for you to either implement
+a probabilistic programming system or implement a custom inference algorithm in
+an existing system, you should be left with a very clear impression of a) how
+one would go about implementing such a probabilistic programming language  and 
+b) where you would go and what it would take to start
+extending, for instance, Anglican with both new probabilistic primitives and 
+new inference algorithms.
+
+{\em Prior} to arriving at the practical, please be sure to do the following 
+pre-practical preparation (note that while this document is long, the required
+preparation work should take, realistically, no more than a few minutes to complete):
+
+\section{Required Pre-Practical Preparation}
+
+Anglican is a language that compiles to Clojure that compiles to the JVM.  For this reason
+you need the Java and Clojure ecosystems installed on either your own personal laptop or on a 
+machine into which you can ssh, and, in the latter case, to which you can open socket (http) connections.  
+
+\subsection{Java Prerequisites}
+
+Clojure depends on having a JVM installed of version $\geq 1.5$ (the most recent available version is fine).  Windows and Mac OS X users can download Java installers from \url{https://www.java.com/en/download/manual.jsp}. Linux users who do not already have Java installed can install from their package managers:
+
+\begin{minted}{bash}
+# Debian/Ubuntu
+sudo apt-get install default-jre
+
+# Fedora
+sudo yum install java-1.7.0-openjdk
+\end{minted}
+
+\subsection{Install Leiningen}
+
+Leiningen is a self-installing automated Clojure project management system.  
+You must install Leiningen from \url{http://leiningen.org/}.  ``lein'' 
+(short for Leiningen) is a self installing script as well as the primary means
+of invoking both Anglican and Clojure read eval print loops (REPL).  Fortunately
+``lein'' is trivial to install in *nix environments (see below).  Windows
+users have it just as easy but should refer to the website.
+\textbf{ Note that Leiningen version 2.x is required}; the version in your 
+linux package repositories may be quite a bit out of date.
+
+\begin{minted}{bash}
+# Download lien to ~/bin
+mkdir ~/bin
+cd ~/bin
+wget http://git.io/XyijMQ
+
+# Make executable
+chmod a+x ~/bin/lein
+
+# Add ~/bin to path
+# Note: Mac OS X users should replace ".bashrc" with ".profile"
+echo  'export PATH="$HOME/bin:$PATH"' >> ~/.bashrc 
+
+# Run lein
+lein
+\end{minted}
+
+\subsection{Download the exercises}
+
+The exercises themselves can be downloaded from the following url:
+
+\url{https://bitbucket.org/probprog/mlss2015/get/master.zip}
+
+Download and unzip this file --- the resulting directory contains everything you need for the practical.
+
+When you have managed to do all this successfully then, in effect, you will have a 
+Leiningen project sitting locally on your machine.   Within it  
+you should try to start a web-based Anglican REPL:
+\footnote{Users installing on a server will instead run \texttt{lein gorilla :ip 0.0.0.0} .}
+
+\begin{minted}{bash}
+# replace "mlss2015" with the unzipped directory containing
+# the exercises
+cd mlss2015
+lein gorilla :port 8990
+\end{minted}
+which will start a web service on port 8990 which allows you to view, edit, and run
+the different exercises.
+Open up a web browser, and visit \url{http://localhost:8990/worksheet.html}.
+Using the menu on the top right you should be able to open and interactively run the exercises,
+using the ``Load a worksheet'' command.
+
+Start by loading \texttt{beta-flip/hello-world-worksheet.clj}.
+You can step through (and execute) the cells in the worksheet by pressing \texttt{shift+enter}.
+
+The first exercise is \texttt{gaussian/gaussian-worksheet.clj}.  
+
+\section{Optional Pre-Practical Preparation}
+
+
+\subsection{Clojure Programming}
+
+Ideally you would be a Clojure programmer, or, at least, a functional 
+programming expert in advance of the practical.  Familiarizing yourself
+with Clojure can only help the overall experience.  The Clojure main website
+\url{http://clojure.org/} has links to a large number of language 
+learning resources, in particular \url{http://clojure-doc.org/articles/tutorials/introduction.html}.
+
+\subsection{Probabilistic Programming Reading}
+
+There are a number of probabilistic programming papers and online resources which you 
+may wish to read in advance of the practical.  For the purposes of this practical we
+specifically recommend reading an introduction to probabilistic programming and the Anglican language \cite{Wood-AISTATS-2014-arXiv-syntax-update-2015} (this is an arXiv update to \cite{Wood-AISTATS-2014} that includes source code in an updated and, as of now, current syntax), a paper on how to implement inference in a probabilistic programming language, in this case probabilistic-C \cite{Paige-ICML-2014}, and a paper about how about higher order probabilistic programming languages can be used to code expressive, particularly Bayesian nonparametric, models \cite{goodman2008church}.
+
+Also there are a number of online resources for Anglican in particular and
+probabilistic programming in general.  
+
+\subsubsection{Online Resources}
+\begin{itemize}
+\item \url{http://www.robots.ox.ac.uk/~fwood/anglican/}
+\item \url{http://dippl.org/}
+\item \url{http://probabilistic-programming.org/wiki/Home}
+\end{itemize}
+
+\bibliographystyle{plain}  
+\bibliography{refs}
+
+\end{document}

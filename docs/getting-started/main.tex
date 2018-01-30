@@ -1,0 +1,208 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+%\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage{inconsolata}
+%\lstset{basicstyle=\ttfamily}
+\usepackage{minted}
+
+\title{MLSS 2015 Probabilistic Programming Practical Getting Started Guide}
+\author{Frank Wood and Tom Jin}
+\date{July 2015}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+The probabilistic programming practical will give you hands-on experience
+with probabilistic programming, particularly the Anglican programming language
+and system \url{http://www.robots.ox.ac.uk/~fwood/anglican}.
+
+By the end of the practical you should be comfortable programming in Clojure 
+and Anglican, and, more importantly, familiar with how to program in probabilistic
+programming languages in general.
+
+The exercises and short-lecture introductions to the exercises will be constructed
+so as to help you understand how probabilistic programming works in general.  And while the 
+amount of time we will have together will be insufficient for you to either implement
+a probabilistic programming system or implement a custom inference algorithm in
+an existing system, you should be left with a very clear impression of a) how
+one would go about implementing such a probabilistic programming language  and 
+b) where you would go and what it would take to start
+extending, for instance, Anglican with both new probabilistic primitives and 
+new inference algorithms.
+
+{\em Prior} to arriving at the practical, please be sure to do the following 
+pre-practical preparation (note that while this document is long, the required
+preparation work should take, realistically, no more than a few minutes to complete):
+
+\section{Required Pre-Practical Preparation}
+
+Anglican is a language that compiles to Clojure that compiles to the JVM.  For this reason
+you need the Java and Clojure ecosystems installed on either your own personal laptop or on a 
+machine into which you can ssh, and, in the latter case, to which you can open socket (http) connections.  
+
+\subsection{Java Prerequisites}
+
+Clojure depends on having a JVM installed of version $\geq 1.5$ (the most recent available version is fine).  Windows and Mac OS X users can download Java installers from \url{https://www.java.com/en/download/manual.jsp}. Linux users who do not already have Java installed can install from their package managers:
+
+\begin{minted}{bash}
+# Debian/Ubuntu
+sudo apt-get install default-jre
+
+# Fedora
+sudo yum install java-1.7.0-openjdk
+\end{minted}
+
+\subsection{Install Leiningen}
+
+Leiningen is a self-installing automated Clojure project management system.  
+You must install Leiningen from \url{http://leiningen.org/}.  ``lein'' 
+(short for Leiningen) is a self installing script as well as the primary means
+of invoking both Anglican and Clojure read eval print loops (REPL).  Fortunately
+``lein'' is trivial to install in *nix environments (see below).  Windows
+users have it just as easy but should refer to the website.
+
+\begin{minted}{bash}
+# Download lien to ~/bin
+mkdir ~/bin
+cd ~/bin
+wget http://git.io/XyijMQ
+
+# Make executable
+chmod a+x ~/bin/lein
+
+# Add ~/bin to path
+echo  'export PATH="$HOME/bin:$PATH"' >> ~/.bashrc 
+
+# Run lein
+lein
+\end{minted}
+
+\subsection{Install Git}
+
+Git is a powerful version control system.  Anglican itself is open source, versioned in Git,
+and available at \url{https://bitbucket.org/probprog/anglican}.  The practical will make use
+of the Anglican user repository \url{https://bitbucket.org/probprog/anglican-user} which 
+provides a bare-bones Leiningen Anglican project which will allow you to get up and running
+very quickly.
+
+A short tutorial on Git is available from \url{https://try.github.io}.
+
+\subsubsection{Windows}
+
+An installer is available for download from
+\url{http://git-scm.com/download/win}.
+
+\subsubsection{OS X}
+
+If you have Xcode installed then git is already installed, otherwise install the Xcode command line tools which includes git. 
+
+\begin{minted}{bash}
+xcode-select --install
+\end{minted}
+
+\subsubsection{Linux}
+
+Git is available from your distribution's package manager.
+
+\begin{minted}{bash}
+# Debian/Ubuntu
+sudo apt-get install git
+
+# Fedora
+sudo yum install git
+\end{minted}
+
+\subsubsection{Post installation (All platforms)}
+
+Configure git with your name and email address to sign your commits with.
+\begin{minted}{bash}
+git config --global user.name "Your Name"
+git config --global user.email "youremail@domain.com"
+\end{minted}
+
+
+\subsection{Fork and Clone the anglican-user Git Repository}
+Here you have an option: if you already have a Bibucket account or don't mind creating one, you may optionally
+use a Bitbucket account to fork the anglican-user repository 
+and, subsequently clone your fork on your local computer.  
+
+Alternatively you may simply clone, via https, the public anglican-user repo
+
+\begin{minted}{bash}
+git clone https://bitbucket.org/probprog/anglican-user.git
+\end{minted}
+
+\subsection{You're Done!}
+
+If you have managed to do all this successfully then you will should have a 
+Leiningen project called anglican-user sitting locally on your machine.  With it 
+you should be able to start a web-based Anglican REPL:
+\footnote{Users installing on a server will instead run \texttt{lein gorilla :ip 0.0.0.0} .}
+
+\begin{minted}{bash}
+cd anglican-user
+lein gorilla
+\end{minted}
+which will open a browser window which points to a locally hosted url.  If it doesn't 
+you should be able to connect to the address printed in the terminal window.  Using the menu on the top right you should be able to open and interactively run \texttt{template.clj}. 
+
+You should be able to start a Clojure command line REPL:
+
+\begin{minted}{bash}
+lein repl
+\end{minted}
+
+\noindent and within the REPL you should be able to execute the following commands
+
+\begin{minted}{clj}
+anglican.core=> (ns mine (:use [anglican core runtime emit]))
+mine=> (sample (normal 1 1))
+\end{minted}
+\noindent which should emit a sample from a $\mathcal{N}(1,1)$ distribution.
+
+\section{Optional Pre-Practical Preparation}
+
+\subsection{IDE Installation}
+
+We will be developing Anglican applications in both the web-based REPL
+and standard software development tools.  Clojure
+is compatible with a number of IDE's and software development toolchains 
+including, for instance, Emacs and Eclipse.  We will use LightTable
+to demonstration IDE-based development.  You may use any tool chain you
+wish, but LightTable is elegantly compatible with Clojure, if spartan
+and initially slightly frustrating.
+
+\url{http://lighttable.com/}
+
+\subsection{Clojure Programming}
+
+Ideally you would be a Clojure programmer, or, at least, a functional 
+programming expert in advance of the practical.  Familiarizing yourself
+with Clojure can only help the overall experience.  The Clojure main website
+\url{http://clojure.org/} has links to a large number of language 
+learning resources, in particular \url{http://clojure-doc.org/articles/tutorials/introduction.html}.
+
+\subsection{Probabilistic Programming Reading}
+
+There are a number of probabilistic programming papers and online resources which you 
+may wish to read in advance of the practical.  For the purposes of this practical we
+specifically recommend reading an introduction to probabilistic programming and the Anglican language \cite{Wood-AISTATS-2014-arXiv-syntax-update-2015} (this is an arXiv update to \cite{Wood-AISTATS-2014} that includes source code in an updated and, as of now, current syntax), a paper on how to implement inference in a probabilistic programming language, in this case probabilistic-C \cite{Paige-ICML-2014}, and a paper about how about higher order probabilistic programming languages can be used to code expressive, particularly Bayesian nonparametric, models \cite{goodman2008church}.
+
+Also there are a number of online resources for Anglican in particular and
+probabilistic programming in general.  
+
+\subsubsection{Online Resources}
+\begin{itemize}
+\item \url{http://www.robots.ox.ac.uk/~fwood/anglican/}
+\item \url{http://dippl.org/}
+\item \url{http://probabilistic-programming.org/wiki/Home}
+\end{itemize}
+
+\bibliographystyle{plain}  
+\bibliography{refs}
+
+\end{document}
